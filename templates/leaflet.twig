@@ -1,0 +1,117 @@
+{#=== OPTIONS ========================================================================================================#}
+
+{% set option = {
+    label:  ('form-control ' ~ field.class)|trim,
+    info:   field.info|default('info.leaflet')
+} %}
+
+{#=== INIT ===========================================================================================================#}
+
+{% set attributes_fieldset = {
+    'data-pin-icon': asset('img/pin_red.png', 'bolt')
+} %}
+
+{% set leaflet = context.content.get(contentkey) %}
+
+{# Don't change these names as they are used as JSON keys inside the db storage! #}
+{% set storage_name = {
+    address:    'address',
+    latitude:   'latitude',
+    longitude:  'longitude',
+    formatted:  'formatted_address',
+} %}
+
+{% set attributes = {
+    address: {
+        class:       'form-control address',
+        name:        name ~ '[' ~ storage_name.address ~ ']',
+        placeholder: __('field.leaflet.placeholder.address') ~ ' …',
+        type:        'text',
+        id: 'addr',
+    },
+
+    latitude: {
+        class:       'form-control latitude',
+        name:        name ~ '[' ~ storage_name.latitude ~ ']',
+        step:        'any',
+        type:        'number',
+        id: 'lat',
+    },
+
+    longitude: {
+        class:       'form-control longitude',
+        name:        name ~ '[' ~ storage_name.longitude ~ ']',
+        step:        'any',
+        type:        'number',
+        id: 'lon',
+    },
+
+    formatted: {
+        class:      'form-control matched',
+        name:        name ~ '[' ~ storage_name.formatted ~ ']',
+        type:        'text',
+        id: 'results',
+    },
+
+    snap: {
+        checked:     true,
+        class:       'snap',
+        type:        'checkbox',
+    }
+} %}
+
+{#=== FIELDSET =======================================================================================================#}
+
+{% extends '@bolt/_base/_fieldset.twig' %}
+
+{# Default location is Two Kings, for now. #}
+{% set fieldset_conf = {
+    latitude: leaflet.latitude|default(52.08184),
+    longitude: leaflet.longitude|default(4.292368),
+}%}
+
+{% block fieldset_type 'leaflet' %}
+{% block fieldset_widget 'fieldleaflet' %}
+
+{% block fieldset_label_text  labelkey %}
+{% block fieldset_label_info  option.info %}
+{% block fieldset_label_class 'col-xs-12' %}
+
+{% block fieldset_controls %}
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label>{{ __('field.leaflet.label.address-lookup') }}</label>
+                        <input{{ hattr(attributes.address) }} value="{{ leaflet.address|default('') }}">
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn-primary btn" onclick="addr_search();">Sök</button>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <label>{{ __('field.leaflet.label.latitude') }}</label>
+                        <input{{ hattr(attributes.latitude) }} value="{{ leaflet.latitude|default('52.08184') }}">
+                    </div>
+                    <div class="col-xs-6">
+                        <label>{{ __('field.leaflet.label.longitude') }}</label>
+                        <input {{ hattr(attributes.longitude) }} value="{{ leaflet.longitude|default('4.292368') }}">
+                    </div>
+                </div>
+                 <div id="results">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mapframe" id="map">
+                    <button type="button" class="btn btn-sm btn-default expand"><i class="fa fa-expand"></i></button>
+                    <button type="button" class="btn btn-sm btn-default compress"><i class="fa fa-compress "></i></button>
+                    <label class="header">{{ __('field.leaflet.label.marker-placement') }}</label>
+                        <div class="mapholder"><i class="fa fa-spinner fa-spin fa-5x"></i></div>
+                        <label class="snapbox"><input{{ hattr(attributes.snap) }}>{{ __('field.leaflet.label.snap') }}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock fieldset_controls %}

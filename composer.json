@@ -1,0 +1,37 @@
+{
+    "name": "johan/leaflet",
+    "description": "",
+    "type": "bolt-extension",
+    "keywords": [
+    ],
+    "require": {
+        "bolt/bolt": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.7"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Johan 'Kaninjegarn' Engdahl",
+            "email": "johan.engdahl@intendit.se"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Bolt\\Extension\\johan\\leaflet\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bolt\\Extension\\johan\\leaflet\\Tests\\": "tests",
+            "Bolt\\Tests\\": "vendor/bolt/bolt/tests/phpunit/unit/"
+        }
+    },
+    "extra": {
+        "bolt-assets": "web",
+        "bolt-class": "Bolt\\Extension\\johan\\leaflet\\leaflet"
+    }
+}
