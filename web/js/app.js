@@ -1,30 +1,33 @@
-    var startlat = "";
+/**
+ * ExtensionName extension class.
+ *
+ * @author Johan 'Kaninjegarn' Engdahl  johan.engdahl@intendit.se>
+ */
+var startlat = "";
     var startlon = "";
 
     var options = {
         center: [startlat, startlon],
         zoom: 9
     }
-    // skapar kartobjektet som används och fylls senare. 
+    // Creating map obj.
     var map = L.map('map', options);
     var nzoom = 12;
 
-    // skapar map markerobjektet.
+    // Creating marker obj
     var mapMarker1 = L.icon({
-        iconUrl: '/extensions/vendor/johan/leaflet/images/marker-icon.png', // sökvägen till bilden.
-        iconSize:     [25, 40], // storleken på markern, width / height
-        iconAnchor:   [22, 94], // vart på bilden som skall agera som "startpunkt" i nuläget längst ner. 
-        popupAnchor:  [-10, -76] // från vilken punkt popuprutan skall dyka upp, i nuläget ligger den i mitten. 
+        iconUrl: '/extensions/vendor/johan/leaflet/images/marker-icon.png', // img path
+        iconSize:     [25, 40], // size of the marker width/height
     });
-    // lägger till kartbild till kartobjeket. 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: 'OSM'}).addTo(map);
+    // adding a background img as map on the map obj
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {attribution: 'SANTANA'}).addTo(map);
 
-    // lägger till markerobjeket på rätt lat/long kordinater.
+    // adding the map marker on the given lat/long
     var myMarker = L.marker([startlat, startlon], {title: "Coordinates",icon: mapMarker1, alt: "Coordinates", draggable: true}).addTo(map).on('dragend', function() {
     var lat = myMarker.getLatLng().lat.toFixed(8);
     var lon = myMarker.getLatLng().lng.toFixed(8);
     
-    // Zoom funktionalitet.
+    // Zoom functions
     var czoom = map.getZoom();
         if(czoom < 18) {
             nzoom = czoom + 2;
@@ -33,37 +36,50 @@
             nzoom = 18;
         }
         if(czoom != 18) {
-            map.setView([lat,lon], nzoom);
+            map.setView([lat,lon], zoom);
             }
             else {
-                map.setView([lat,lon]);
+                map.setView([lat,lon,zoom]);
             }
     document.getElementById('lat').value = lat;
     document.getElementById('lon').value = lon;
+
     myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
     });
 
-    // funktion som ger popupenrutan ovanför markericon dess text.
-    function chooseAddr(lat1, lng1){
+    // function that sets the correkt lat/long and zoom. creating a popup box and the output inside the box. 
+    function chooseAddr(lat1, lng1, zoom, current_place){
         myMarker.closePopup();
-        map.setView([lat1, lng1],18);
+        zoom_init = document.getElementById('zoomlvl');
+        zoom = zoom_init.options[zoom_init.selectedIndex].value;
+        
+        map.setView([lat1, lng1, zoom]);
+        map.setZoom(zoom);
         myMarker.setLatLng([lat1, lng1]);
         lat = lat1.toFixed(8);
         lon = lng1.toFixed(8);
+
+
         document.getElementById('lat').value = lat;
         document.getElementById('lon').value = lon;
-        myMarker.bindPopup("<i><b>Din önskade adress ligger här!</b><br>Lat: </i>" + "<b>" + lat + 
+        
+        document.getElementById('zoomlvl').value = zoom
+        current_place = document.getElementById('addr').value;
+        myMarker.bindPopup("<i><b>" + capitalize(current_place) + " ligger här!</b><br>Lat: </i>" + "<b>" + lat + 
         "</b>" + "<i><br />Lon: </i>" + "<b>" + lon + "</b>").openPopup();
     }
-    // funktion som gör att man inte behöver trycka på knappen "sök"
-    // räcker med att trycka på enter.
+
+    function capitalize(s) {
+        return s[0].toUpperCase() + s.slice(1);
+    }
+    // function that makes the "search button" activate on "enter"
+    // only for dev, will be disabled on live version.
     $('.address').keypress(function(event) {
         if (event.keyCode == 13) {
             addr_search();
         }
     });
-    // funktionen som gör att korrekt adress kommer upp i form av en grön knapp(i nuläget)
-    // när du trycker på sök/enter.
+    // function that outputs a green button with correct matched address and updates the map.
     function myFunction(arr){
         var out = "<br />";
         var i;
@@ -79,7 +95,7 @@
                 }
 
     }
-    // sökfunktionen som skriver ut matched address och gör requestet till leaflet. 
+    // Function that updates the map with the given fields, zoom/lat/long.
     function addr_search(){
         var inp = document.getElementById("addr");
         var xmlhttp = new XMLHttpRequest();

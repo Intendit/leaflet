@@ -1,3 +1,7 @@
+{# Leaflet extension twigclass.
+
+    @author Johan 'Kaninjegarn' Engdahl  johan.engdahl@intendit.se>
+
 {#=== OPTIONS ========================================================================================================#}
 
 {% set option = {
@@ -13,12 +17,13 @@
 
 {% set leaflet = context.content.get(contentkey) %}
 
-{# Don't change these names as they are used as JSON keys inside the db storage! #}
+{# Ändra inte namnen för att dessa används för att spara datan i databasen. #}
 {% set storage_name = {
     address:    'address',
     latitude:   'latitude',
     longitude:  'longitude',
     formatted:  'formatted_address',
+    zoom:        'zoom',
 } %}
 
 {% set attributes = {
@@ -27,7 +32,7 @@
         name:        name ~ '[' ~ storage_name.address ~ ']',
         placeholder: __('field.leaflet.placeholder.address') ~ ' …',
         type:        'text',
-        id: 'addr',
+        id:          'addr',
     },
 
     latitude: {
@@ -35,7 +40,8 @@
         name:        name ~ '[' ~ storage_name.latitude ~ ']',
         step:        'any',
         type:        'number',
-        id: 'lat',
+        id:          'lat',
+        readonly:    true,
     },
 
     longitude: {
@@ -43,20 +49,27 @@
         name:        name ~ '[' ~ storage_name.longitude ~ ']',
         step:        'any',
         type:        'number',
-        id: 'lon',
+        id:          'lon',
+        readonly:    true,
     },
 
     formatted: {
         class:      'form-control matched',
         name:        name ~ '[' ~ storage_name.formatted ~ ']',
         type:        'text',
-        id: 'results',
+        id:          'results',
     },
 
     snap: {
         checked:     true,
         class:       'snap',
         type:        'checkbox',
+    },
+    zoom: {
+        class:        'form-control zoom',
+        name:          name ~ '[' ~ storage_name.zoom ~ ']',
+        type:         'number',
+        id:           'zoomlvl',
     }
 } %}
 
@@ -64,7 +77,6 @@
 
 {% extends '@bolt/_base/_fieldset.twig' %}
 
-{# Default location is Two Kings, for now. #}
 {% set fieldset_conf = {
     latitude: leaflet.latitude|default(52.08184),
     longitude: leaflet.longitude|default(4.292368),
@@ -78,31 +90,47 @@
 {% block fieldset_label_class 'col-xs-12' %}
 
 {% block fieldset_controls %}
+    {# skapar divar som följer sidans layout. samt labelfält för lat/long/adress etc #}
     <div class="col-xs-12">
         <div class="row">
+        
             <div class="col-sm-6">
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <label>{{ __('field.leaflet.label.address-lookup') }}</label>
+                        {# Inputfältet för adress. #}
+                        <label><strong>Address</strong></label>
                         <input{{ hattr(attributes.address) }} value="{{ leaflet.address|default('') }}">
                     </div>
                 </div>
-                <div>
-                    <button type="button" class="btn-primary btn" onclick="addr_search();">Sök</button>
-                </div>
                 <div class="form-group">
-                    <div class="col-xs-6">
-                        <label>{{ __('field.leaflet.label.latitude') }}</label>
+                    <div class="col-xs-4">
+                        {# ett fält som genererar latitud från adressen du uppgav ovan. #}
+                        <label><strong>Latitude</strong></label>
                         <input{{ hattr(attributes.latitude) }} value="{{ leaflet.latitude|default('52.08184') }}">
                     </div>
-                    <div class="col-xs-6">
-                        <label>{{ __('field.leaflet.label.longitude') }}</label>
+                    <div class="col-xs-4">
+                        {# ett fält som genererar latitud från adressen du uppgav ovan. #}
+                        <label><strong>Longitude</strong></label>
                         <input {{ hattr(attributes.longitude) }} value="{{ leaflet.longitude|default('4.292368') }}">
                     </div>
+                    <div class="col-xs-3">
+                        <label><strong>Zoom</strong></label>
+                        <select{{ hattr(attributes.zoom) }} value="{{ leaflet.zoom|default('') }}">
+                            {% for i in 1..20 %}
+                                <option>{{i}}</option>
+                            {% endfor %}                                                    
+                        </select>
+                    </div>
                 </div>
-                 <div id="results">
+                <div>
+                    {# en knapp som fungerar som är kopplad till en sökfunktion. #}
+                    <button type="button" class="btn-primary btn" onclick="addr_search();">Sök</button>
+                </div>
+                {# Här kommer den genererade fullständiga adressen för din adress + long/lat match.  #}
+                <div id="results">
                 </div>
             </div>
+            {# Här skrivs kartan ut och tar dig till din angivna adress och sätter en marker på adressen. #}
             <div class="col-sm-4">
                 <div class="mapframe" id="map">
                     <button type="button" class="btn btn-sm btn-default expand"><i class="fa fa-expand"></i></button>

@@ -633,3 +633,12 @@
 	margin-left: -12px;
 	border-right-color: #fff;
 	}
+/* mappens styling */
+.mapframe{
+	border-radius: 15px;
+	height: 400px;
+	width: 455px;
+}
+.address{
+	border-radius: 8px;
+}
