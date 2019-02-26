@@ -2,7 +2,7 @@ Array.prototype.forEach.call(document.getElementsByClassName("map-canvas"), func
     var places = JSON.parse(elem.dataset.mapobj);
     var zoom = JSON.parse(elem.dataset.zoom);
     var layerurl = elem.dataset.layerurl;
-    setInterval(function(){
+    setTimeout(function(){
         map.setZoom(zoom);
     }, 1000);
     var center = L.latLngBounds([places[0].latitude, places[0].longitude], [places[0].latitude, places[0].longitude]);
