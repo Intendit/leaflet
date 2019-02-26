@@ -17,13 +17,13 @@
 
 {% set leaflet = context.content.get(contentkey) %}
 
-{# Ändra inte namnen för att dessa används för att spara datan i databasen. #}
+{# Dont change these names, they are used for storage. #}
 {% set storage_name = {
     address:    'address',
     latitude:   'latitude',
     longitude:  'longitude',
     formatted:  'formatted_address',
-    zoom:        'zoom',
+    zoom:       'zoom',
 } %}
 
 {% set attributes = {
@@ -40,7 +40,6 @@
         name:        name ~ '[' ~ storage_name.latitude ~ ']',
         step:        'any',
         type:        'number',
-        id:          'lat',
         readonly:    true,
     },
 
@@ -49,7 +48,6 @@
         name:        name ~ '[' ~ storage_name.longitude ~ ']',
         step:        'any',
         type:        'number',
-        id:          'lon',
         readonly:    true,
     },
 
@@ -69,51 +67,38 @@
         class:        'form-control zoom',
         name:          name ~ '[' ~ storage_name.zoom ~ ']',
         type:         'number',
-        id:           'zoomlvl',
     }
 } %}
 
 {#=== FIELDSET =======================================================================================================#}
 
-{% extends '@bolt/_base/_fieldset.twig' %}
 
 {% set fieldset_conf = {
     latitude: leaflet.latitude|default(52.08184),
     longitude: leaflet.longitude|default(4.292368),
 }%}
 
-{% block fieldset_type 'leaflet' %}
-{% block fieldset_widget 'fieldleaflet' %}
-
-{% block fieldset_label_text  labelkey %}
-{% block fieldset_label_info  option.info %}
-{% block fieldset_label_class 'col-xs-12' %}
-
 {% block fieldset_controls %}
-    {# skapar divar som följer sidans layout. samt labelfält för lat/long/adress etc #}
-    <div class="col-xs-12">
+    <label>{{labelkey}}</label>
+    <div class="col-xs-12 leaflet-main">
         <div class="row">
-        
-            <div class="col-sm-6">
+            <div class="col-sm-6 addressContainer">
                 <div class="form-group">
-                    <div class="col-sm-12">
-                        {# Inputfältet för adress. #}
+                    <div class="col-sm-12 addressInput">
                         <label><strong>Address</strong></label>
                         <input{{ hattr(attributes.address) }} value="{{ leaflet.address|default('') }}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-xs-4">
-                        {# ett fält som genererar latitud från adressen du uppgav ovan. #}
+                    <div class="col-xs-4 latInput">
                         <label><strong>Latitude</strong></label>
                         <input{{ hattr(attributes.latitude) }} value="{{ leaflet.latitude|default('52.08184') }}">
                     </div>
-                    <div class="col-xs-4">
-                        {# ett fält som genererar latitud från adressen du uppgav ovan. #}
+                    <div class="col-xs-4 lonInput">
                         <label><strong>Longitude</strong></label>
                         <input {{ hattr(attributes.longitude) }} value="{{ leaflet.longitude|default('4.292368') }}">
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-3 zoomInput">
                         <label><strong>Zoom</strong></label>
                         <select{{ hattr(attributes.zoom) }} value="{{ leaflet.zoom|default('') }}">
                             {% for i in 1..20 %}
@@ -122,17 +107,14 @@
                         </select>
                     </div>
                 </div>
-                <div>
-                    {# en knapp som fungerar som är kopplad till en sökfunktion. #}
-                    <button type="button" class="btn-primary btn" onclick="addr_search();">Sök</button>
+                <div class="mapSearchButtonOutput">
+                    <button type="button" class="btn-primary btn mapSearchButton" onclick="addr_search(event);">Sök</button>
                 </div>
-                {# Här kommer den genererade fullständiga adressen för din adress + long/lat match.  #}
-                <div id="results">
+                <div id="results" class="results">
                 </div>
             </div>
-            {# Här skrivs kartan ut och tar dig till din angivna adress och sätter en marker på adressen. #}
-            <div class="col-sm-4">
-                <div class="mapframe" id="map">
+            <div class="col-sm-4 map-target">
+                <div class="mapframe">
                     <button type="button" class="btn btn-sm btn-default expand"><i class="fa fa-expand"></i></button>
                     <button type="button" class="btn btn-sm btn-default compress"><i class="fa fa-compress "></i></button>
                     <label class="header">{{ __('field.leaflet.label.marker-placement') }}</label>

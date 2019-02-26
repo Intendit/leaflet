@@ -1,15 +1,19 @@
 # Insert the your maplayer here
 layerUrl: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
 
+# This will set the zoom for frontend
+# 1-20. Where 20 is really zoomed-in
+# Recomended zoom-level is 12-15
+zoom: 15
 
 
-# Standard.
-# 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-
-# Standard hotspots.
+# Standard .
 #'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
 
-# standard
+# Standard stuff.
+# 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+
+# standard stuff
 #'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
 
 # green standard map

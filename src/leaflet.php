@@ -19,8 +19,8 @@ class leaflet extends SimpleExtension{
     private $args = [];
 
     private $defaults =  [
-        'latitude' => '55,61460015',
-        'longitude' => '12,98972694',
+        'latitude' => '',
+        'longitude' => '',
         'html' => "dockplatsen 12, malmö",
         'icon' => "marker-icon.png",
         'color' => "rgba(0,0,0,1)",
@@ -63,7 +63,7 @@ class leaflet extends SimpleExtension{
      * 
      * @return object leafletField()
      */
-    public function registerFields(){
+    public function registerFields() {
         return [
             new leafletField(),
         ];
@@ -75,7 +75,7 @@ class leaflet extends SimpleExtension{
      * @return array leaf
      * 
      */
-    protected function registerTwigFunctions(){
+    protected function registerTwigFunctions() {
         return [
             'leaf' => ['leaf', ['is_variadic' => true]],
         ];
@@ -97,7 +97,7 @@ class leaflet extends SimpleExtension{
      * @return object $leaflet_js_frontend_src
      * @return object $leaflet_css_frontend_src
      */
-    protected function registerAssets(){
+    protected function registerAssets() {
 
         $leaflet_js_backend_output = Javascript::create()
             ->setFileName('js/app.js')
@@ -142,45 +142,46 @@ class leaflet extends SimpleExtension{
         ];
     }
     // register twig paths
-    protected function registerTwigPaths(){
+    protected function registerTwigPaths() {
         return [
             'templates' => ['position' => 'prepend', 'namespace' => 'bolt']
         ];
     }
     // render twig output.
-    public function getLeafletTemplate(){
+    public function getLeafletTemplate() {
         return $this->renderTemplate('leaflet_frontend.twig');
     }
     // Merging the 2 arrays(deafault and args).
-    public function leaf(array $args = []){
+    public function leaf(array $args = []) {
         $config = $this->getConfig();
         $this->args = array_merge($this->defaults, $args);
         $this->unifyData();
         $this->map = [];
-        $this->zoom = $this->args['zoom'];
+        $this->zoom = $config['zoom'];
         $layerUrl = $config["layerUrl"];
-        foreach ($this->args['records'] as $record){
+
+        foreach ($this->args['records'] as $record) {
             $field = $record[$this->args['leaflet_field']];            
             array_push(
                 $this->map,
                 [
                     'latitude' => $field['latitude'],
                     'longitude' => $field['longitude'],
-                    'html' => $record[$this->args['html_field']] ?: $field['formatted_address'],
+                    'html' => $record[$this->args['html']] ?: $field['html'],
                     'icon' => $record[$this->args['icon_field']] ?: $this->args['icon'],
                     'color' => $record[$this->args['color_field']] ?: $this->args['color']
                 ]
             );
         }
-        foreach ($this->args['maps'] as $this->mapItem){
+        foreach ($this->args['maps'] as $this->mapItem) {     
             array_push(
                 $this->map,
                 [
                     'latitude' => $this->mapItem['latitude'],
                     'longitude' => $this->mapItem['longitude'],
-                    'html' => $this->args['html'] ?: ($this->mapItem['html'] ?: $this->mapItem['formatted_address']),
-                    'icon' => $this->mapItem['icon'] ?: $this->args['icon'],
-                    'color' => $this->mapItem['color'] ?: $this->args['color']
+                    'html' => isset($this->mapItem['html']) ? $this->mapItem['html'] : $this->mapItem['address'],
+                    'icon' => $this->args['icon'] ? $this->args['icon'] : $this->mapItem['icon'],
+                    'color' => $this->args['color'] ?: $this->mapItem['color']
                 ]
             );
         }
@@ -193,21 +194,20 @@ class leaflet extends SimpleExtension{
         return new \Twig_Markup($str, 'UTF-8');
     }
     // stuffing the array with.. stuff 
-    private function unifyData()
-    {
-        if($this->args['record']) {
+    private function unifyData() {
+        if ($this->args['record']) {
             array_push(
                 $this->args['records'],
                 $this->args['record']
             );
         }
-        if($this->args['map']) {
+        if ($this->args['map']) {
             array_push(
                 $this->args['maps'],
                 $this->args['map']
             );
         }
-        if($this->args['latitude']) {
+        if ($this->args['latitude']) {
             array_push(
                 $this->args['maps'],
                 [
@@ -220,9 +220,8 @@ class leaflet extends SimpleExtension{
             );
         }
     }
-    private function removeData()
-    {
-        foreach ($this->mapfields as $this->mapfield){
+    private function removeData() {
+        foreach ($this->mapfields as $this->mapfield) {
             unset($this->args[$this->mapfield]);
         }
     }    
