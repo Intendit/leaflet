@@ -2,11 +2,11 @@ Array.prototype.forEach.call(document.getElementsByClassName("map-canvas"), func
     var places = JSON.parse(elem.dataset.mapobj);
     var zoom = JSON.parse(elem.dataset.zoom);
     var layerurl = elem.dataset.layerurl;
-    setTimeout(function(){
+    setTimeout(function() {
         map.setZoom(zoom);
     }, 1000);
     var center = L.latLngBounds([places[0].latitude, places[0].longitude], [places[0].latitude, places[0].longitude]);
-    places.forEach(function(place){
+    places.forEach(function(place) {
         center.extend([ place.latitude, place.longitude ]);
     })
     var map = L.map(elem, {
@@ -16,7 +16,7 @@ Array.prototype.forEach.call(document.getElementsByClassName("map-canvas"), func
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         })],
     }).fitBounds(center);
-    places.forEach(function(place){
+    places.forEach(function(place) {
         var cssIcon = L.icon({
             className: typeof place.icon == "string" ? 'fa ' + place.icon : 'fa fa-taxi',
             iconSize: typeof place.iconSize == "array" ? place.icon : [20, 37],
@@ -30,5 +30,5 @@ Array.prototype.forEach.call(document.getElementsByClassName("map-canvas"), func
             .setContent(place.html)
         ).addTo(map);
     })
-    map.fitBounds(center);
+    map.fitBounds(center);    
 }); 
