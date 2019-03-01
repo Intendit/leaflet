@@ -1,46 +1,35 @@
 # Insert the your maplayer here
-layerUrl: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+layerUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
 
 # This will set the zoom for frontend
 # 1-20. Where 20 is really zoomed-in
 # Recomended zoom-level is 12-15
-zoom: 15
+zoom: 10
 
-
-# Standard .
-#'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
-
-# Standard stuff.
-# 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-
-# standard stuff
-#'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-
-# green standard map
-#'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png'
-
-# Tropic green/mountain-ish.
-#'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
-
-# Black/white.
-#'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png'
-
-# wite/grey.
-#'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png'
-
-# green that shows terrain.
-#'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png'
-
-# Yellow that shows train rails, nothing special.
-#'https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}'
-
-#'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
-
-# grey, green map, newspaper lookalike.
+# Standard.
 #'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
 
-# green/yellow map.
+# green standard ish.
+#'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+
+# vintage map.
+# 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+
+# grey
+#'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png'
+
+# cartoon design
+#'https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}'
+
+# shades of brown
+#'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
+
+# grey, white
+#'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+
+# Oldschool atlas book.
 #'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'
 
 # For more maps check the given link and copy the "L.titleLayer"
 # https://leaflet-extras.github.io/leaflet-providers/preview/
+
