@@ -157,7 +157,14 @@ class leaflet extends SimpleExtension{
         $this->args = array_merge($this->defaults, $args);
         $this->unifyData();
         $this->map = [];
-        $this->zoom = $config['zoom'];
+        if ( isset($this->args['zoom'])) {
+            $this->zoom = $this->args['zoom'];
+        }
+        else if (count($this->args['maps']) > 1) {
+            $this->zoom = $config['multi_marker_zoom'];
+        } else {
+            $this->zoom = $config['zoom'];
+        }
         $layerUrl = $config["layerUrl"];
 
         foreach ($this->args['records'] as $record) {
