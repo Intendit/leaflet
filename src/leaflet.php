@@ -21,7 +21,7 @@ class leaflet extends SimpleExtension{
     private $defaults =  [
         'latitude' => '',
         'longitude' => '',
-        'html' => "dockplatsen 12, malmÃ¶",
+        'html' => "dockplatsen 12, malmö",
         'icon' => "marker-icon.png",
         'color' => "rgba(0,0,0,1)",
         'map' => false,
