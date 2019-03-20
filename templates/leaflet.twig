@@ -52,10 +52,10 @@
     },
 
     formatted: {
-        class:      'form-control matched',
+        class:      'form-control formatted_address',
         name:        name ~ '[' ~ storage_name.formatted ~ ']',
         type:        'text',
-        id:          'results',
+        readonly:    true
     },
 
     snap: {
@@ -72,12 +72,10 @@
 
 {#=== FIELDSET =======================================================================================================#}
 
-
 {% set fieldset_conf = {
     latitude: leaflet.latitude|default(52.08184),
     longitude: leaflet.longitude|default(4.292368),
 }%}
-
 {% block fieldset_controls %}
     <label>{{labelkey}}</label>
     <div class="col-xs-12 leaflet-main">
@@ -98,19 +96,14 @@
                         <label><strong>Longitude</strong></label>
                         <input {{ hattr(attributes.longitude) }} value="{{ leaflet.longitude|default('4.292368') }}">
                     </div>
-                    <div class="col-xs-3 zoomInput">
-                        <label><strong>Zoom</strong></label>
-                        <select{{ hattr(attributes.zoom) }} value="{{ leaflet.zoom|default('') }}">
-                            {% for i in 1..20 %}
-                                <option>{{i}}</option>
-                            {% endfor %}                                                    
-                        </select>
-                    </div>
                 </div>
                 <div class="mapSearchButtonOutput">
                     <button type="button" class="btn-primary btn mapSearchButton" onclick="addr_search(event);">Sök</button>
                 </div>
                 <div id="results" class="results">
+                </div>
+                <div>
+                    <input{{ hattr(attributes.formatted) }} value="{{ leaflet.formatted|default('') }}">
                 </div>
             </div>
             <div class="col-sm-4 map-target">
