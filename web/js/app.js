@@ -7,8 +7,11 @@
 var leafletCounter = 1;
 var mapDivCounter = 1;
 
+var loopCounter = 0;
+
 var startlat = "";
 var startlon = "";
+var formatted_address ="";
 
 var map ="";
 var maps = {};
@@ -50,6 +53,7 @@ $(document).ready(function () {
 });
 // Creating map obj.
 function mapCreate() {
+    loopCounter = 0;
     $(".mapframe").each(function() {
         if ($(this).hasClass( "leaflet-container" )) { 
         } else {
@@ -66,6 +70,13 @@ function mapCreate() {
             markers[this.id] = L.marker([startlat, startlon], {title: "Coordinates",icon: mapMarker1, alt: "Coordinates", draggable: true}).addTo(maps[this.id]).on('dragend', function() {
             });
         }
+        loopCounter++;        
+        startlat = $('#leaflet_container'+loopCounter+' .latitude').val();
+        startlon = $('#leaflet_container'+loopCounter+' .longitude').val();
+        if (startlat != undefined && startlon != undefined) {
+            markers[this.id].setLatLng([startlat, startlon]);
+            maps[this.id].setView([startlat, startlon, 15]);
+        }
     });
 }
 // function that sets the correkt lat/long and zoom. creating a popup box and the output inside the box. 
@@ -73,17 +84,17 @@ function chooseAddr(lat1, lng1, event, current_place) {
     containerId = event.target.closest('.leaflet-main').getAttribute('id');
     var i = event.target.closest('.leaflet-main').getElementsByClassName('mapframe')[0].getAttribute('id');
     markers[i].closePopup();
-    zoom_init = event.target.closest('.leaflet-main').getElementsByClassName('zoom')[0];
-    var zoom = zoom_init.options[zoom_init.selectedIndex].value;
+    var zoom = 15;
     maps[i].setView([lat1, lng1, zoom]);
     maps[i].setZoom(zoom);
     markers[i].setLatLng([lat1, lng1]);
     lat = lat1.toFixed(8);
     lon = lng1.toFixed(8);
-
+    maps[i].invalidateSize();
+    formatted_address = event.target.getAttribute("data-formatted");
     event.target.closest('.leaflet-main').getElementsByClassName('latitude')[0].value = lat;
     event.target.closest('.leaflet-main').getElementsByClassName('longitude')[0].value = lon;
-    event.target.closest('.leaflet-main').getElementsByClassName('zoom')[0].value = zoom;
+    event.target.closest('.leaflet-main').getElementsByClassName('formatted_address')[0].value = formatted_address;
     current_place = event.target.closest('.leaflet-main').getElementsByClassName('address')[0].value;
 
     markers[i].bindPopup("<i><b>" + current_place + " ligger här!</b><br>Lat: </i>" + "<b>" + lat + 
@@ -97,7 +108,7 @@ function myFunction(arr, containerId) {
 
     if (arr.length > 0) {
         for (i = 0; i < arr.length; i++) {
-            out += "<button class='address btn-primary' title='Show Location and Coordinates' onclick='chooseAddr(" + arr[i].lat + ", " 
+            out += "<button class='address btn-primary' title='Show Location and Coordinates' data-formatted='"+arr[i].display_name+"' onclick='chooseAddr(" + arr[i].lat + ", " 
             + arr[i].lon + ", event);return false;'>" + arr[i].display_name + "</button>";
         }
         $('#'+containerId+' .results').html(out);
