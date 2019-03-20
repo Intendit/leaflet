@@ -61,7 +61,7 @@ function mapCreate() {
             iconSize:     [25, 40], // size of the marker width/height
         });
         // adding a background img as map on the map obj
-            L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: 'SANTANA SENPAI <3'}).addTo(maps[this.id]);
+            L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png').addTo(maps[this.id]);
             // adding the map marker on the given lat/long
             markers[this.id] = L.marker([startlat, startlon], {title: "Coordinates",icon: mapMarker1, alt: "Coordinates", draggable: true}).addTo(maps[this.id]).on('dragend', function() {
             });
