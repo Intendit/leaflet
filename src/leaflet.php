@@ -187,7 +187,7 @@ class leaflet extends SimpleExtension{
                     'latitude' => $this->mapItem['latitude'],
                     'longitude' => $this->mapItem['longitude'],
                     'html' => isset($this->mapItem['html']) ? $this->mapItem['html'] : $this->mapItem['address'],
-                    'icon' => $this->args['icon'] ? $this->args['icon'] : $this->mapItem['icon'],
+                    'icon' => isset($this->mapItem['icon']) ? $this->mapItem['icon'] : $this->args['icon'],
                     'color' => $this->args['color'] ?: $this->mapItem['color']
                 ]
             );
