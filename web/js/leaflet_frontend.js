@@ -18,7 +18,7 @@ Array.prototype.forEach.call(document.getElementsByClassName("map-canvas"), func
     }).fitBounds(center);
     places.forEach(function(place) {
         var cssIcon = L.icon({
-            className: typeof place.icon == "string" ? 'fa ' + place.icon : 'fa fa-taxi',
+            className: typeof place.icon == "string" ? place.icon : 'fa fa-taxi',
             iconSize: typeof place.iconSize == "array" ? place.icon : [20, 37],
             iconUrl: '/extensions/vendor/johan/leaflet/images/marker-icon.png',
         });
